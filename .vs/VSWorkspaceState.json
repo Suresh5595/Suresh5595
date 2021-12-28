@@ -4,10 +4,12 @@
     "\\application",
     "\\application\\controllers",
     "\\application\\controllers\\masters",
-    "\\application\\models",
+    "\\application\\helpers",
     "\\application\\views",
-    "\\application\\views\\masters"
+    "\\application\\views\\layout",
+    "\\application\\views\\masters",
+    "\\application\\views\\masters\\customer"
   ],
-  "SelectedNode": "\\application\\controllers\\masters\\Customer_view.php",
+  "SelectedNode": "\\application\\views\\layout\\footer.php",
   "PreviewInSolutionExplorer": false
 }

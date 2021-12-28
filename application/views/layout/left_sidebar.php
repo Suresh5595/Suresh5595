@@ -27,6 +27,7 @@
             <li> <a href="<?php echo base_url();?>index.php/masters/hsn" class="menu"><i class="material-icons">donut_small</i><span>HSN</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/gst" class="menu"><i class="material-icons">dns</i><span>GST</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/unit" class="menu"><i class="material-icons">ac_unit</i><span>Unit</span></a></li>
+            <li> <a href="<?php echo base_url();?>index.php/masters/state" class="menu"><i class="zmdi zmdi-map"></i><span>State</span></a></li>
             <li> <a href="javascript:void(0);" class="menu-toggle"><i class="material-icons">people</i><span>Employee</span> </a>
                 <ul class="ml-menu">
                     <li><a href="<?php echo base_url();?>index.php/masters/manage_employee">Manage Employee</a></li>
