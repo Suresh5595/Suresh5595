@@ -50,4 +50,42 @@ class Common_model extends CI_Model{
 			}
 		}
 	}
+
+	public function get_val($select,$array,$table){
+		$this->db->select($select);
+		$this->db->where($array);
+		$this->db->from($table);
+		$query = $this->db->get();
+		if($query->num_rows()==1)
+		{
+			$data=$query->row_array();
+			return $value=$data[$select];
+		}
+		else
+		{
+			return false;
+		}
+    }
+  
+  
+	public function get_val_multiple($col_get,$where,$tbl){
+
+		$this->db->select($col_get);
+		if(is_array($where)){
+			foreach ($where as $key => $value){
+				$this->db->where($key,$value);
+			}
+		}
+		$this->db->from($tbl);
+		$query = $this->db->get();
+		if($query->num_rows()==1)
+		{
+			$data=$query->row_array();
+			return $data[$col_get];
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

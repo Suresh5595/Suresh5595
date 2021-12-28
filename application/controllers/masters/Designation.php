@@ -9,7 +9,6 @@ class Designation extends CI_Controller {
 	public function index()
 	{	$data['page_title'] ='Designation';
 		$data['content'] = 'masters/designation';
-		$this->load->view('layout/temp',$data);
 		$options = array(
 			"option" => "select",
 			"type"   => "result",
@@ -17,6 +16,7 @@ class Designation extends CI_Controller {
 			"where"  => array("dep_del" => 0)
 		);
 		$data['departments'] = $this->common_model->queries($options);
+		$this->load->view('layout/temp',$data);
 	}
 	public function getlist(){
 		$response = [];
@@ -33,6 +33,7 @@ class Designation extends CI_Controller {
 					"s_no" => ($key+1),
 					"id" => $result->des_id,
 					"des_dep" => $result->department_id_fk,
+					"department_name" => get_val('dep_name','dep_id',$result->department_id_fk,'rsm_department'),
 					"des_name" => $result->des_name,
 					"des_status" => $result->des_status
 				);
@@ -54,7 +55,7 @@ class Designation extends CI_Controller {
 					"des_name" => $des_name[$count],
 					"des_status" => $des_status[$count],
 					"des_del" => 0,
-					"des_id_fk" => $this->session->userdata('user_id'),
+					"user_id_fk" => $this->session->userdata('user_id'),
 					"date_added" => date('Y-m-d h:i:s')
 				);
 				if($id[$count] !=0){

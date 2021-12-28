@@ -65,9 +65,9 @@ $(document).ready(function(){
                 for(var count = 0; count < data.length; count++)
                 {
                     html += '<tr>';
-                    html += '<td><input type="checkbox" id="'+data[count].id+'" s_no="'+data[count].s_no+'" data-des_dep="'+data[count].des_dep+'" data-des_name="'+data[count].des_name+'" data-des_status="'+data[count].des_status+'" class="check_box"  /></td>';
+                    html += '<td><input type="checkbox" id="'+data[count].id+'" s_no="'+data[count].s_no+'" data-des_dep="'+data[count].des_dep+'" data-department_name="'+data[count].department_name+'" data-des_name="'+data[count].des_name+'" data-des_status="'+data[count].des_status+'" class="check_box"  /></td>';
                     html += '<td>'+data[count].s_no+'</td>';
-                    html += '<td>'+data[count].des_dep+'</td>';
+                    html += '<td>'+data[count].department_name+'</td>';
                     html += '<td>'+data[count].des_name+'</td>';
                     if(data[count].des_status == 1){
                          html += '<td><lable class="btn btn-success small-label">Active</label></td>';
@@ -84,17 +84,25 @@ $(document).ready(function(){
         var html = '';
         if(this.checked)
         {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-des_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" checked /></td>';
+            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-department_name="'+$(this).data('department_name')+'" data-des_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" checked /></td>';
             html += '<td>'+$(this).attr('s_no')+'</td>';
-            html += '<td><select name="des_dep[]" id="des_dep_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white"></td>';
+            html += '<td>';
+			html += '<select name="des_dep[]" id="des_dep_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white">';
+			<?php if($departments){ ?>
+				<?php foreach($departments as $val){ ?>
+					html += '<option value="<?php echo $val->dep_id; ?>"><?php echo $val->dep_name; ?></option>';
+				<?php } ?>
+			<?php } ?>
+			html += '</select>';
+			html += '</td>';
             html += '<td><input type="text" name="des_name[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("des_name")+'" /></td>';
             html += '<td><select name="des_status[]" id="des_status_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="'+$(this).attr('id')+'" /></td>';
             html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">UPDATE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="edit('+$(this).attr('id')+')" ><span class="badge badge-warning">CANCEL</span></a></td>';
         }else
         {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-desc_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" /></td>';
+            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-department_name="'+$(this).data('department_name')+'" data-des_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" /></td>';
             html += '<td>'+$(this).attr('s_no')+'</td>';
-            html += '<td>'+$(this).data('des_dep')+'</td>';
+            html += '<td>'+$(this).data('department_name')+'</td>';
             html += '<td>'+$(this).data('des_name')+'</td>';
             if($(this).data('des_status') == 1){
                 html += '<td><lable class="btn btn-success small-label">Active</label></td>';
@@ -105,6 +113,7 @@ $(document).ready(function(){
         }
         $(this).closest('tr').html(html);
         $('#des_status_'+$(this).attr('id')+'').val($(this).data('des_status'));
+		$('#des_dep_'+$(this).attr('id')+'').val($(this).data('des_dep'));
     });
 });
 
@@ -156,7 +165,13 @@ function addItemRow(){
               var html = '<tr>';
               html += '<td><input type="checkbox"  class="check_box" checked /></td>';
               html += '<td></td>';
-              html += '<td><select name="des_dep[]" class="form-control  form-control-bg-white"></td>';
+			  html += '<td><select name="des_dep[]" id="des_dep_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white">';
+			  <?php if($departments){ ?>
+					<?php foreach($departments as $val){ ?>
+						html += '<option value="<?php echo $val->dep_id; ?>"><?php echo $val->dep_name; ?></option>';
+					<?php } ?>
+			  <?php } ?>
+			  html += '</select></td>';
               html += '<td><input type="text" name="des_name[]" class="form-control field_required form-control-bg-white" /></td>';
               html += '<td><select name="des_status[]" class="form-control  form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="0" /></td>';
               html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">SAVE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="$(this).parent().parent().remove();" ><span class="badge badge-danger">REMOVE</span></a></td>';
