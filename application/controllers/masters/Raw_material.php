@@ -23,10 +23,10 @@ class Raw_material extends CI_Controller {
 		if($results){
 			foreach($results as $key => $result){
 				$response[] = array(
-					"id" => $result->item_id,
-					"item_code" => $result->item_code,
-					"item_name" => $result->item_name,
-					"item_status" => $result->item_status
+					"id" => $result->raw_material_id,
+					"raw_material_code" => $result->raw_material_code,
+					"raw_material_name" => $result->raw_material_name,
+					"raw_material_status" => $result->raw_material_status
 				);
 			}
 		}
@@ -37,15 +37,15 @@ class Raw_material extends CI_Controller {
 	public function update(){ 
 		if($this->input->post('hidden_id')){
 			$id= $this->input->post('hidden_id');
-			$item_code = $this->input->post('item_code');
-			$item_name= $this->input->post('item_name');
-			$item_status = $this->input->post('item_status');
+			$raw_material_code = $this->input->post('raw_material_code');
+			$raw_material_name= $this->input->post('raw_material_name');
+			$raw_material_status = $this->input->post('raw_material_status');
 			for($count = 0; $count < count($id); $count++){
 				$data = array(
-					"item_code" => $item_code[$count],
-					"item_name" => $item_name[$count],
-					"item_status" => $item_status[$count],
-					"item_del" => 0,
+					"raw_material_code" => $raw_material_code[$count],
+					"raw_material_name" => $raw_material_name[$count],
+					"raw_material_status" => $raw_material_status[$count],
+					"raw_material_del" => 0,
 					"user_id_fk" => $this->session->userdata('user_id'),
 					"date_added" => date('Y-m-d h:i:s')
 				);
@@ -54,7 +54,7 @@ class Raw_material extends CI_Controller {
 						   "option" => "update",
 						   "table"  => "rsm_raw_material",
 						   "data"   => $data,
-						   "where"  => array("item_id" => $id[$count])
+						   "where"  => array("raw_material_id" => $id[$count])
 					 );
 		        }else{
 					$options = array(
@@ -74,7 +74,7 @@ class Raw_material extends CI_Controller {
 		$options = array(
 			   "option" => "delete",
 			   "table"  => "rsm_raw_material",
-			   "where"  => array("item_id" => $id)
+			   "where"  => array("raw_material_id" => $id)
 		);
 		$this->common_model->queries($options);
 		$this->session->set_flashdata('success_alert','Data Deleted Successfully');

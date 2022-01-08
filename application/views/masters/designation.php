@@ -9,7 +9,7 @@
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">                
-                <button class="btn btn-primary btn-icon btn-round hidden-sm-down float-right m-l-10" onclick="addItemRow();" type="button">
+                <button class="btn btn-primary btn-icon btn-round hidden-sm-down float-right m-l-10" onclick="addRow();" type="button">
                     <i class="zmdi zmdi-plus"></i>
                 </button>            
             </div>
@@ -20,163 +20,168 @@
             <div class="col-lg-12">
                 <div class="card">
                    <div class="body">
-                   <form method="post" id="update_form">
                         <table id="item_table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
                                 <tr>
-                                    <th style="width:1px;"></th>
                                     <th style="width:5px;">S.No.</th>
-                                    <th>Department</th>
-                                    <th>Name</th>
+                                    <th>Department Name</th>
+									<th>Designation</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+							<?php if($results){ ?>
+								<?php foreach($results as $key => $val){ ?>
+									<tr>
+										<td><?php echo $key+1;?></td>
+										<td><?php echo get_val('dep_name','dep_id',$val->department_id_fk,'rsm_department');?></td>
+										<td><?php echo $val->des_name;?></td>
+										<td>
+											<?php if($val->des_status == 0) { ?>
+												<lable class="btn btn-success small-label">Active</label>
+											<?php }else{ ?>
+												<lable class="btn btn-danger small-label">In-Active</label>
+											<?php }?>
+										</td>
+										<td><a href="javascript:void(0);" onclick="edit(<?php echo $val->des_id;?>)" ><span class="badge badge-info">EDIT</span></a>&numsp;<a href="javascript:void(0);" onclick="deleteRecord(<?php echo $val->des_id;?>)"><span class="badge badge-danger">DELETE</span></a></td>
+									</tr>
+								<?php } ?>
+							<?php } ?>
                             </tbody>
                         </table>
-                   </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<script>  
-$(document).ready(function(){ 
-    <?php
-    if($this->session->flashdata('err_alert')){ ?>
-          var text = "<?php echo $this->session->flashdata('err_alert');?>";
-          showNotification('alert-danger',text,'top','right','','');
-    <?php
-    }
-    if($this->session->flashdata('success_alert')){ ?>
-          var text = "<?php echo $this->session->flashdata('success_alert');?>";
-          showNotification('alert-success',text,'top','right','','');
-    <?php } ?>
-    fetch_data();
-    function fetch_data(){
-        $.ajax({
-            url:"<?php echo base_url();?>index.php/masters/designation/getlist",
-            method:"POST",
-            dataType:"json",
-            success:function(data){
-                var html = '';
-                for(var count = 0; count < data.length; count++)
-                {
-                    html += '<tr>';
-                    html += '<td><input type="checkbox" id="'+data[count].id+'" s_no="'+data[count].s_no+'" data-des_dep="'+data[count].des_dep+'" data-department_name="'+data[count].department_name+'" data-des_name="'+data[count].des_name+'" data-des_status="'+data[count].des_status+'" class="check_box"  /></td>';
-                    html += '<td>'+data[count].s_no+'</td>';
-                    html += '<td>'+data[count].department_name+'</td>';
-                    html += '<td>'+data[count].des_name+'</td>';
-                    if(data[count].des_status == 1){
-                         html += '<td><lable class="btn btn-success small-label">Active</label></td>';
-                    }else{
-                         html += '<td><lable class="btn btn-danger small-label">In-Active</label></td>';
-                    }
-                    html += '<td><a href="javascript:void(0);" onclick="edit('+data[count].id+')" ><span class="badge badge-info">EDIT</span></a>&numsp;<a href="javascript:void(0);" onclick="deleteRecord('+data[count].id+')"><span class="badge badge-danger">DELETE</span></a></td>';
-                }
-                $('tbody').html(html);
-            }
-        });
-    }
-    $(document).on('click', '.check_box', function(){
-        var html = '';
-        if(this.checked)
-        {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-department_name="'+$(this).data('department_name')+'" data-des_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" checked /></td>';
-            html += '<td>'+$(this).attr('s_no')+'</td>';
-            html += '<td>';
-			html += '<select name="des_dep[]" id="des_dep_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white">';
-			<?php if($departments){ ?>
-				<?php foreach($departments as $val){ ?>
-					html += '<option value="<?php echo $val->dep_id; ?>"><?php echo $val->dep_name; ?></option>';
-				<?php } ?>
-			<?php } ?>
-			html += '</select>';
-			html += '</td>';
-            html += '<td><input type="text" name="des_name[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("des_name")+'" /></td>';
-            html += '<td><select name="des_status[]" id="des_status_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="'+$(this).attr('id')+'" /></td>';
-            html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">UPDATE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="edit('+$(this).attr('id')+')" ><span class="badge badge-warning">CANCEL</span></a></td>';
-        }else
-        {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" s_no="'+$(this).attr('s_no')+'" data-des_dep="'+$(this).data('des_dep')+'" data-department_name="'+$(this).data('department_name')+'" data-des_name="'+$(this).data('des_name')+'" data-des_status="'+$(this).data('des_status')+'" class="check_box" /></td>';
-            html += '<td>'+$(this).attr('s_no')+'</td>';
-            html += '<td>'+$(this).data('department_name')+'</td>';
-            html += '<td>'+$(this).data('des_name')+'</td>';
-            if($(this).data('des_status') == 1){
-                html += '<td><lable class="btn btn-success small-label">Active</label></td>';
-            }else{
-                html += '<td><lable class="btn btn-danger small-label">In-Active</label></td>';
-            }
-            html += '<td><a href="javascript:void(0);" onclick="edit('+$(this).attr('id')+')" ><span class="badge badge-info">EDIT</span></a>&numsp;<a href="javascript:void(0);" onclick="deleteRecord('+$(this).attr('id')+')"><span class="badge badge-danger">DELETE</span></a></td>';
-        }
-        $(this).closest('tr').html(html);
-        $('#des_status_'+$(this).attr('id')+'').val($(this).data('des_status'));
-		$('#des_dep_'+$(this).attr('id')+'').val($(this).data('des_dep'));
-    });
-});
+<!-- popup section -->
+<div class="modal right fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header" style="border-bottom-style: solid;border-bottom-width: 1px;padding-top: 10px;padding-left: 10px;padding-right: 10px;">
+				<button style="margin-left: 0px;margin-top: 0px;margin-right: 0px;margin-bottom: 0px;padding-top: 0px;padding-left: 0px;padding-bottom: 0px;padding-right: 0px;top: 10px;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h2 style="font-size: 15px;color: #1fa7b2;margin-bottom: 10px;"><strong id="popup_title">ADD Designation</strong></h2>
+			</div>
+
+			<div class="modal-body">
+			<form method="post" onSubmit="return form_validate();" id="designation_form" action="<?php echo base_url();?>index.php/masters/designation/update">
+				<input type="hidden" name="hidden_id" value="0" id="hidden_id">
+				<div class="row clearfix">
+					<div class="col-sm-12">
+						<b>Department</b>
+						<div class="form-group">
+							<select class="form-control field_required" name="department_id" id="department_id">
+							<option value="">-Select-</option>
+								<?php if($departments){ ?>
+									<?php foreach($departments as $dep_val){ ?>
+										<option value="<?php echo $dep_val->dep_id;?>"><?php echo $dep_val->dep_name;?></option>
+									<?php } ?>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row clearfix">
+					<div class="col-sm-12">
+						<b>Designation Name</b>
+						<div class="form-group">
+							<input type="text" class="form-control field_required" id="designation_name" name="designation_name">
+						</div>
+					</div>
+				</div>
+				<div class="row clearfix">
+					<div class="col-sm-12">
+						<b>Designation Status</b>
+						<div class="form-group">
+							<select class="form-control" name="designation_status" id="designation_status">
+								<option value="0">Active</option>
+								<option value="1">In-Active</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="submit" id="popup_btn" class="btn btn-primary">Save</button>
+			</div>
+
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+<script>
+function form_validate(){ 
+    var flag = true;
+	$('#designation_form').find('.field_required').each(function(){
+		if($(this).val() == ''){
+			 $(this).parent('div').addClass('has-danger');
+			 $(this).addClass('forn-control-danger');
+			 flag = false;
+	    }else{
+			$(this).parent('div').removeClass('has-danger');
+			 $(this).removeClass('forn-control-danger');
+		}
+	});
+	return flag;
+}
 
 function edit(id){
-    $('#'+id).trigger('click');
+	$('#popup_title').html('');
+	$('#popup_btn').html('');
+	$('#popup_title').html('EDIT DESIGNATION');
+	$('#popup_btn').html('UPDATE');
+	$('#hidden_id').val(0); 
+    $('#designation_name').val('');
+	$('#department_id').val('');
+    $('#designation_status').val(0);
+	var dataString = "id="+id;
+    $.ajax
+    ({
+    type: "POST",
+    cache : false,
+    url: "<?php echo base_url(); ?>index.php/masters/designation/edit",
+    data: dataString,
+    ashync: false,
+    dataType:'json',
+    success: function(data){ 
+         $('#myModal2').modal({ backdrop: 'static',keyboard: true,show: true });
+         $('#hidden_id').val(data.des_id); 
+		 $('#department_id').val(data.department_id_fk);
+         $('#designation_name').val(data.des_name);
+         $('#designation_status').val(data.des_status);
+       }
+     });
+}
+
+function addRow(){
+	$('#popup_title').html('');
+	$('#popup_btn').html('');
+	$('#popup_title').html('ADD DESIGNATION');
+	$('#popup_btn').html('SAVE');
+	$('#hidden_id').val(0); 
+	$('#department_id').val('');
+    $('#designation_name').val('');
+    $('#designation_status').val(0);
+	$('#myModal2').modal({ backdrop: 'static',keyboard: true,show: true });
 }
 
 function deleteRecord(id){
-    if (confirm('Are you sure you want to delete this designation?')) {
-          $.ajax({
-          url:"<?php echo base_url();?>index.php/masters/designation/daleteRecord",
-          method:"POST",
-          data:'id='+id,
-          success:function(html){
-          window.location.reload();
-          }
-          });
+	var dataString = "id="+id;
+    $.ajax
+    ({
+    type: "POST",
+    cache : false,
+    url: "<?php echo base_url(); ?>index.php/masters/designation/daleteRecord",
+    data: dataString,
+    ashync: false,
+    dataType:'json',
+    success: function(data){ 
+		location.reload(); 
     }
-}
-
-function update(){
-    var flag = true;
-    $('#update_form').find('.field_required').each(function(){
-        if($(this).val() == ''){
-             $(this).parent('td').addClass('td-has-danger');
-             $(this).addClass('forn-control-danger');
-             flag = false;
-        }else{
-            $(this).parent('td').removeClass('td-has-danger');
-             $(this).removeClass('forn-control-danger');
-        }
     });
-    if(flag == true){
-         if($('.check_box:checked').length > 0){
-             $.ajax({
-               url:"<?php echo base_url();?>index.php/masters/designation/update",
-               method:"POST",
-               data:$('#update_form').serialize(),
-               success:function(html){
-                   window.location.reload();
-               }
-             });
-         }
-    }
 }
 
-function addItemRow(){
-
-              var html = '<tr>';
-              html += '<td><input type="checkbox"  class="check_box" checked /></td>';
-              html += '<td></td>';
-			  html += '<td><select name="des_dep[]" id="des_dep_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white">';
-			  <?php if($departments){ ?>
-					<?php foreach($departments as $val){ ?>
-						html += '<option value="<?php echo $val->dep_id; ?>"><?php echo $val->dep_name; ?></option>';
-					<?php } ?>
-			  <?php } ?>
-			  html += '</select></td>';
-              html += '<td><input type="text" name="des_name[]" class="form-control field_required form-control-bg-white" /></td>';
-              html += '<td><select name="des_status[]" class="form-control  form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="0" /></td>';
-              html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">SAVE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="$(this).parent().parent().remove();" ><span class="badge badge-danger">REMOVE</span></a></td>';
-              html +='</tr>';
-              $('tbody').append(html);
-             
-}
 </script>

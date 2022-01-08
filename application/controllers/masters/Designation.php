@@ -16,76 +16,75 @@ class Designation extends CI_Controller {
 			"where"  => array("dep_del" => 0)
 		);
 		$data['departments'] = $this->common_model->queries($options);
-		$this->load->view('layout/temp',$data);
-	}
-	public function getlist(){
-		$response = [];
 		$options = array(
 			"option" => "select",
 			"type"   => "result",
 			"table"  => "rsm_designation",
 			"where"  => array("des_del" => 0)
 		);
-		$results = $this->common_model->queries($options);
-		if($results){
-			foreach($results as $key => $result){
-				$response[] = array(
-					"s_no" => ($key+1),
-					"id" => $result->des_id,
-					"des_dep" => $result->department_id_fk,
-					"department_name" => get_val('dep_name','dep_id',$result->department_id_fk,'rsm_department'),
-					"des_name" => $result->des_name,
-					"des_status" => $result->des_status
-				);
-			}
-		}
-
-		echo json_encode($response);
+		$data['results'] = $this->common_model->queries($options);
+		$this->load->view('layout/temp',$data);
 	}
 
 	public function update(){ 
-		if($this->input->post('hidden_id')){
+		if($this->input->post()){
 			$id= $this->input->post('hidden_id');
-			$des_dep= $this->input->post('des_dep');
-			$des_name= $this->input->post('des_name');
-			$des_status = $this->input->post('des_status');
-			for($count = 0; $count < count($id); $count++){
-				$data = array(
-					"department_id_fk" => $des_dep[$count],
-					"des_name" => $des_name[$count],
-					"des_status" => $des_status[$count],
-					"des_del" => 0,
-					"user_id_fk" => $this->session->userdata('user_id'),
-					"date_added" => date('Y-m-d h:i:s')
+			$des_dep= $this->input->post('department_id');
+			$des_name= $this->input->post('designation_name');
+			$des_status = $this->input->post('designation_status');
+			$data = array(
+				"department_id_fk" => $des_dep,
+				"des_name" => $des_name,
+				"des_status" => $des_status,
+				"des_del" => 0,
+				"user_id_fk" => $this->session->userdata('user_id'),
+				"date_added" => date('Y-m-d h:i:s')
+			);
+			if($id !=0){
+				$options = array(
+					"option" => "update",
+					"table"  => "rsm_designation",
+					"data"   => $data,
+					"where"  => array("des_id" => $id)
 				);
-				if($id[$count] !=0){
-					 $options = array(
-						   "option" => "update",
-						   "table"  => "rsm_designation",
-						   "data"   => $data,
-						   "where"  => array("des_id" => $id[$count])
-					 );
-		        }else{
-					$options = array(
-						   "option" => "insert",
-						   "table"  => "rsm_designation",
-						   "data"   => $data,
-					);
-				}
-				$this->common_model->queries($options);
+				$this->session->set_flashdata('success_alert','Data Updated Successfully');
+		    }else{
+				$options = array(
+						"option" => "insert",
+						"table"  => "rsm_designation",
+						"data"   => $data,
+				);
+				$this->session->set_flashdata('success_alert','Data Insert Successfully');
 			}
+			$this->common_model->queries($options);
 		}
-		$this->session->set_flashdata('success_alert','Data Updated Successfully');
+		redirect('masters/designation');
+	}
+
+	public function edit(){
+		if($this->input->post('id')){
+			$options = array(
+			"option" => "select",
+			"type"   => "row",
+			"table"  => "rsm_designation",
+			"where"  => array("des_id" => $this->input->post('id'))
+		);
+		$res = $this->common_model->queries($options);
+		echo json_encode($res);
+		}
 	}
 
 	public function daleteRecord(){
 		$id = $this->input->post('id');
 		$options = array(
-			   "option" => "delete",
+			   "option" => "update",
 			   "table"  => "rsm_designation",
+			   "data"   => array("des_del" => 1),
 			   "where"  => array("des_id" => $id)
 		);
-		$this->common_model->queries($options);
+		$res = $this->common_model->queries($options);
 		$this->session->set_flashdata('success_alert','Data Deleted Successfully');
+		echo json_encode($res);
 	}
 }
+

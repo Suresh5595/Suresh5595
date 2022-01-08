@@ -9,7 +9,7 @@
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">                
-                <button class="btn btn-primary btn-icon btn-round hidden-sm-down float-right m-l-10" onclick="addItemRow();" type="button">
+                <button class="btn btn-primary btn-icon btn-round hidden-sm-down float-right m-l-10" onclick="addraw_materialRow();" type="button">
                     <i class="zmdi zmdi-plus"></i>
                 </button>            
             </div>
@@ -65,11 +65,11 @@ $(document).ready(function(){
                 for(var count = 0; count < data.length; count++)
                 {
                     html += '<tr>';
-                    html += '<td><input type="checkbox" id="'+data[count].id+'" data-item_code="'+data[count].item_code+'" data-item_name="'+data[count].item_name+'" data-item_status="'+data[count].item_status+'" class="check_box"  /></td>';
+                    html += '<td><input type="checkbox" id="'+data[count].id+'" data-raw_material_code="'+data[count].raw_material_code+'" data-raw_material_name="'+data[count].raw_material_name+'" data-raw_material_status="'+data[count].raw_material_status+'" class="check_box"  /></td>';
 					html += '<td>'+data[count].id+'</td>';
-                    html += '<td>'+data[count].item_code+'</td>';
-                    html += '<td>'+data[count].item_name+'</td>';
-					if(data[count].item_status == 1){
+                    html += '<td>'+data[count].raw_material_code+'</td>';
+                    html += '<td>'+data[count].raw_material_name+'</td>';
+					if(data[count].raw_material_status == 1){
 						 html += '<td><lable class="btn btn-success small-label">Active</label></td>';
 					}else{
 						 html += '<td><lable class="btn btn-danger small-label">In-Active</label></td>';
@@ -84,20 +84,20 @@ $(document).ready(function(){
 		var html = '';
 		if(this.checked)
         {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" data-item_code="'+$(this).data('item_code')+'" data-item_name="'+$(this).data('item_name')+'" data-item_status="'+$(this).data('item_status')+'" class="check_box" checked /></td>';
+            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" data-raw_material_code="'+$(this).data('raw_material_code')+'" data-raw_material_name="'+$(this).data('raw_material_name')+'" data-raw_material_status="'+$(this).data('raw_material_status')+'" class="check_box" checked /></td>';
 			html += '<td>'+$(this).attr('id')+'</td>';
-            html += '<td><input type="text" name="item_code[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("item_code")+'" /></td>';
-            html += '<td><input type="text" name="item_name[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("item_name")+'" /></td>';
-            html += '<td><select name="item_status[]" id="item_status_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="'+$(this).attr('id')+'" /></td>';
+            html += '<td><input type="text" name="raw_material_code[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("raw_material_code")+'" /></td>';
+            html += '<td><input type="text" name="raw_material_name[]" class="form-control field_required form-control-bg-white" value="'+$(this).data("raw_material_name")+'" /></td>';
+            html += '<td><select name="raw_material_status[]" id="raw_material_status_'+$(this).attr('id')+'" class="form-control field_required form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="'+$(this).attr('id')+'" /></td>';
 			html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">UPDATE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="edit('+$(this).attr('id')+')" ><span class="badge badge-warning">CANCEL</span></a></td>';
         }
         else
         {
-            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" data-item_code="'+$(this).data('item_code')+'" data-item_name="'+$(this).data('item_name')+'" data-item_status="'+$(this).data('item_status')+'" class="check_box" /></td>';
+            html = '<td><input type="checkbox" id="'+$(this).attr('id')+'" data-raw_material_code="'+$(this).data('raw_material_code')+'" data-raw_material_name="'+$(this).data('raw_material_name')+'" data-raw_material_status="'+$(this).data('raw_material_status')+'" class="check_box" /></td>';
 			html += '<td>'+$(this).attr('id')+'</td>';
-            html += '<td>'+$(this).data('item_code')+'</td>';
-            html += '<td>'+$(this).data('item_name')+'</td>';
-			if($(this).data('item_status') == 1){
+            html += '<td>'+$(this).data('raw_material_code')+'</td>';
+            html += '<td>'+$(this).data('raw_material_name')+'</td>';
+			if($(this).data('raw_material_status') == 1){
 				html += '<td><lable class="btn btn-success small-label">Active</label></td>';
 			}else{
 				html += '<td><lable class="btn btn-danger small-label">In-Active</label></td>';
@@ -105,7 +105,7 @@ $(document).ready(function(){
 			html += '<td><a href="javascript:void(0);" onclick="edit('+$(this).attr('id')+')" ><span class="badge badge-info">EDIT</span></a>&numsp;<a href="javascript:void(0);" onclick="deleteRecord('+$(this).attr('id')+')"><span class="badge badge-danger">DELETE</span></a></td>';
         }
         $(this).closest('tr').html(html);
-        $('#item_status_'+$(this).attr('id')+'').val($(this).data('item_status'));
+        $('#raw_material_status_'+$(this).attr('id')+'').val($(this).data('raw_material_status'));
     });
 });
 
@@ -152,13 +152,13 @@ function update(){
     }
 }
 
-function addItemRow(){
+function addraw_materialRow(){
 	var html = '<tr>';
 	html += '<td><input type="checkbox"  class="check_box" checked /></td>';
 	html += '<td></td>';
-    html += '<td><input type="text" name="item_code[]" class="form-control field_required form-control-bg-white" /></td>';
-    html += '<td><input type="text" name="item_name[]" class="form-control field_required form-control-bg-white" /></td>';
-    html += '<td><select name="item_status[]" class="form-control  form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="0" /></td>';
+    html += '<td><input type="text" name="raw_material_code[]" class="form-control field_required form-control-bg-white" /></td>';
+    html += '<td><input type="text" name="raw_material_name[]" class="form-control field_required form-control-bg-white" /></td>';
+    html += '<td><select name="raw_material_status[]" class="form-control  form-control-bg-white"><option value="1">Active</option><option value="0">IN-active</option></select><input type="hidden" name="hidden_id[]" value="0" /></td>';
 	html +='<td><button type="button" class="btn btn-primary btn-label" onclick="update();">SAVE</button>&numsp;&numsp;<a href="javascript:void(0);" onclick="$(this).parent().parent().remove();" ><span class="badge badge-danger">REMOVE</span></a></td>';
 	html +='</tr>';
 	$('tbody').append(html);

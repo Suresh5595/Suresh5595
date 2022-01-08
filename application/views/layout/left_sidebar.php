@@ -22,8 +22,8 @@
             <li> <a href="<?php echo base_url();?>index.php/masters/designation" class="menu"><i class="material-icons">ac_unit</i><span>Designation</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/source" class="menu"><i class="material-icons">language</i><span>Source</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/item" class="menu"><i class="material-icons">add_shopping_cart</i><span>Item</span></a></li>
-            <li> <a href="<?php echo base_url();?>index.php/masters/raw_material" class="menu"><i class="material-icons">album</i><span>Raw Material</span></a></li>
-            <li> <a href="<?php echo base_url();?>index.php/masters/component" class="menu"><i class="material-icons">call_split</i><span>Component</span></a></li>
+            <li> <a href="<?php echo base_url();?>index.php/masters/machine" class="menu"><i class="material-icons">album</i><span>Machine</span></a></li>
+            <li> <a href="<?php echo base_url();?>index.php/masters/process" class="menu"><i class="material-icons">call_split</i><span>Process</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/hsn" class="menu"><i class="material-icons">donut_small</i><span>HSN</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/gst" class="menu"><i class="material-icons">dns</i><span>GST</span></a></li>
             <li> <a href="<?php echo base_url();?>index.php/masters/unit" class="menu"><i class="material-icons">ac_unit</i><span>Unit</span></a></li>
@@ -34,17 +34,10 @@
                     <li><a href="<?php echo base_url();?>index.php/masters/employee">Add Employee</a></li>
                 </ul>
             </li>
-            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="material-icons">person</i><span>Customer</span></a>
+            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="material-icons">person</i><span>People</span> </a>
                 <ul class="ml-menu">
-                    <li><a href="<?php echo base_url();?>index.php/masters/customer_view">Manage Customer</a></li>
-                    <li><a href="<?php echo base_url();?>index.php/masters/customer">Add customer</a></li>
-                </ul>
-            </li>
-            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="material-icons">person</i><span>Supplier</span> </a>
-                <ul class="ml-menu">
-                    <li><a href="<?php echo base_url();?>index.php/masters/supplier_view">Manage Supplier</a></li>
                     <li> <a href="<?php echo base_url();?>index.php/masters/supplier">Supplier</a></li>
-            
+					<li> <a href="<?php echo base_url();?>index.php/masters/customer">Customer</a></li>
                 </ul>
             </li>
             <li class="header">PURCHASE</li>

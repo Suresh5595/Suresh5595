@@ -8,7 +8,7 @@ class Supplier extends CI_Controller {
 
 	public function index()
 	{	$data['page_title'] ='Supplier';
-		$data['content'] = 'masters/supplier/supplier';
+		$data['content'] = 'masters/supplier';
 		$this->load->view('layout/temp',$data);
 	}
 }
